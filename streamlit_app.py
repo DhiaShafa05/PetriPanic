@@ -27,7 +27,72 @@ microbes_data = {
         "Prevention": "Menghindari makanan yang tidak dipasteurisasi, memasak makanan hingga suhu internal yang tepat, serta menjaga kebersihan tempat penyimpanan makanan.",
         "Handling": "Listeriosis membutuhkan pengobatan medis segera, biasanya dengan antibiotik."
     },
-    # Tambahkan mikroba lainnya sesuai kebutuhan
+    "Clostridium botulinum": {
+        "Description": "Clostridium botulinum adalah bakteri Gram-positif yang dapat menghasilkan racun botulinum yang sangat berbahaya bagi manusia.",
+        "History": "Bakteri ini ditemukan oleh Emile van Ermengem pada tahun 1895.",
+        "Source": "Makanan kalengan yang tidak dipasteurisasi, ikan, dan daging.",
+        "Symptoms": "Penglihatan kabur, kesulitan menelan, kelemahan otot, kelumpuhan.",
+        "Prevention": "Memasak makanan dengan benar, menjaga kebersihan dalam proses pengalengan.",
+        "Handling": "Jika terpapar, segera konsultasikan dengan dokter untuk mendapatkan pengobatan dengan antitoksin botulinum."
+    },
+    "Campylobacter jejuni": {
+        "Description": "Campylobacter jejuni adalah bakteri berbentuk spiral yang sering menjadi penyebab utama diare pada manusia.",
+        "History": "Ditemukan pada tahun 1886 oleh Theodor Escherich.",
+        "Source": "Daging ayam mentah, air yang terkontaminasi, susu tidak dipasteurisasi.",
+        "Symptoms": "Diare, sakit perut, demam.",
+        "Prevention": "Memasak daging ayam hingga matang sempurna, mencuci tangan dengan sabun setelah menangani makanan mentah.",
+        "Handling": "Konsumsi cairan yang cukup dan istirahat. Jika gejala berat, konsultasikan dengan dokter."
+    },
+    "Vibrio cholerae": {
+        "Description": "Vibrio cholerae adalah bakteri penyebab kolera yang ditularkan melalui air atau makanan yang terkontaminasi.",
+        "History": "Ditemukan oleh Filippo Pacini pada tahun 1854.",
+        "Source": "Air yang terkontaminasi, makanan yang terkontaminasi seperti sayuran, kerang.",
+        "Symptoms": "Diare berat, dehidrasi parah, muntah.",
+        "Prevention": "Menghindari konsumsi air dan makanan yang tidak terjamin kebersihannya, memasak makanan dengan benar.",
+        "Handling": "Jika terpapar, segera konsultasikan dengan dokter untuk perawatan rehidrasi dan antibiotik."
+    },
+    "Staphylococcus aureus": {
+        "Description": "Staphylococcus aureus adalah bakteri yang dapat menghasilkan racun yang menyebabkan keracunan makanan.",
+        "History": "Ditemukan oleh Sir Alexander Ogston pada tahun 1880.",
+        "Source": "Produk susu, daging yang tidak dipasteurisasi, makanan yang tidak disimpan dengan benar.",
+        "Symptoms": "Mual, muntah, kram perut.",
+        "Prevention": "Menyimpan makanan pada suhu yang tepat, menjaga kebersihan tangan dan alat masak.",
+        "Handling": "Makan segera setelah disiapkan, dan hindari meninggalkan makanan pada suhu ruangan terlalu lama."
+    },
+    "Bacillus cereus": {
+        "Description": "Bacillus cereus adalah bakteri yang dapat menyebabkan keracunan makanan dengan gejala diare atau muntah.",
+        "History": "Ditemukan pada tahun 1887 oleh Ferdinand Cohn.",
+        "Source": "Nasi dan makanan yang telah dimasak tetapi disimpan pada suhu kamar terlalu lama.",
+        "Symptoms": "Muntah, diare, kram perut.",
+        "Prevention": "Menyimpan makanan pada suhu yang benar, tidak membiarkan makanan yang dimasak terlalu lama pada suhu kamar.",
+        "Handling": "Jika terpapar, biasanya gejalanya akan sembuh dengan sendirinya setelah beberapa jam."
+    },
+    "Shigella spp.": {
+        "Description": "Shigella adalah bakteri penyebab disentri, infeksi usus yang menyebabkan diare berdarah.",
+        "History": "Ditemukan pada tahun 1897 oleh Kiyoshi Shiga.",
+        "Source": "Makanan dan air yang terkontaminasi, terutama sayuran dan buah yang tidak dicuci dengan baik.",
+        "Symptoms": "Diare berdarah, kram perut, demam.",
+        "Prevention": "Mencuci tangan setelah menggunakan toilet dan sebelum makan, mencuci sayuran dan buah dengan air yang bersih.",
+        "Handling": "Jika terpapar, pastikan cukup cairan dan segera konsultasikan dengan dokter."
+    },
+    "Yersinia enterocolitica": {
+        "Description": "Yersinia enterocolitica adalah bakteri yang menyebabkan penyakit enteritis, infeksi saluran pencernaan.",
+        "History": "Ditemukan oleh Alexandre Yersin pada tahun 1889.",
+        "Source": "Daging babi, produk susu yang tidak dipasteurisasi, air yang terkontaminasi.",
+        "Symptoms": "Diare, demam, sakit perut.",
+        "Prevention": "Memasak daging babi dengan suhu yang aman, mencuci tangan setelah menangani produk daging mentah.",
+        "Handling": "Menghindari makanan yang terkontaminasi dan pastikan pengolahan makanan dilakukan dengan benar."
+    },
+    "Norovirus": {
+        "Description": "Norovirus adalah virus yang dapat menyebabkan gastroenteritis, sering dikenal dengan keracunan makanan.",
+        "History": "Ditemukan pada tahun 1972.",
+        "Source": "Makanan yang terkontaminasi, air yang tidak bersih.",
+        "Symptoms": "Mual, muntah, diare, kram perut.",
+        "Prevention": "Mencuci tangan dengan sabun, memanaskan makanan dengan benar.",
+        "Handling": "Jika terpapar, pastikan banyak minum air untuk mencegah dehidrasi dan istirahat yang cukup."
+    },
+    # Menambahkan mikroba lainnya sesuai kebutuhan
+    # Add another 15 types of microbes here as needed.
 }
 
 # Fungsi untuk seksi "Library"
@@ -74,11 +139,17 @@ def petri_panic_game():
     # Memilih mikroba secara acak
     microbes_list = list(microbes_data.keys())
     correct_microbe = random.choice(microbes_list)
+    
+    # Membuat petunjuk tanpa menyebutkan nama mikroba
     clue = microbes_data[correct_microbe]["Description"]
+    source = microbes_data[correct_microbe]["Source"]
 
-    # Menampilkan petunjuk
+    # Membuat pertanyaan tanpa nama mikroba
+    question = f"Microba ini adalah bakteri yang dapat menyebabkan infeksi usus pada manusia, terutama ditemukan pada {source}. Apa nama mikroba ini?"
+
+    # Menampilkan pertanyaan
     st.subheader("Petunjuk:")
-    st.write(clue)
+    st.write(question)
 
     # Input tebakan
     user_guess = st.text_input("Tebak nama mikroba:")
@@ -113,3 +184,4 @@ if menu == "Library":
     library_section()
 elif menu == "Petri Panic":
     petri_panic_game()
+
