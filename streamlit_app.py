@@ -1,48 +1,92 @@
 import streamlit as st
 
-# Judul Halaman
-st.title("Petri Panic🦠🍕")
-st.write("Berikut adalah 20 jenis mikroorganisme yang umum ditemukan dalam makanan, baik yang bermanfaat maupun berbahaya.")
+import streamlit as st
+import random
 
-# Path folder gambar
-image_folder = "images"
+# Data mikroba (informasi yang sudah ditambahkan lebih lengkap)
+microbes_data = {
+    "Salmonella enterica": {
+        "Description": "Salmonella enterica adalah bakteri Gram-negatif berbentuk batang yang dapat menyebabkan infeksi usus pada manusia.",
+        "History": "Ditemukan oleh Theobald Smith pada tahun 1885.",
+        "Source": "Daging ayam mentah, telur mentah, susu tidak dipasteurisasi.",
+        "Symptoms": "Diare, demam, kram perut, muntah.",
+        "Prevention": "Memasak daging hingga matang sempurna, mencuci tangan dan peralatan masak setelah kontak dengan produk hewani mentah.",
+        "Handling": "Jika terpapar, minum banyak cairan dan segera hubungi dokter jika gejala berat muncul."
+    },
+    "Escherichia coli (E. coli)": {
+        "Description": "Escherichia coli (E. coli) adalah bakteri Gram-negatif yang biasanya ditemukan di usus manusia dan hewan.",
+        "History": "Ditemukan oleh Theodor Escherich pada tahun 1885.",
+        "Source": "Daging sapi kurang matang, sayuran yang terkontaminasi, air yang terkontaminasi.",
+        "Symptoms": "Diare berdarah, kram perut, muntah.",
+        "Prevention": "Memasak daging hingga suhu internal yang aman, mencuci sayuran dan buah dengan air mengalir, menghindari konsumsi air yang tidak terjamin kebersihannya.",
+        "Handling": "Konsumsi cairan yang cukup dan konsultasikan dengan tenaga medis jika gejala berlangsung lebih dari dua hari."
+    },
+    # Tambahkan data mikroba lainnya sesuai kebutuhan...
+}
 
-# Daftar mikroba
-mikroba_list = [
-    {"nama": "Saccharomyces cerevisiae", "deskripsi": "Ragi untuk fermentasi roti dan alkohol.", "file": "saccharomyces_cerevisiae.jpg"},
-    {"nama": "Lactobacillus bulgaricus", "deskripsi": "Bakteri penghasil yoghurt.", "file": "lactobacillus_bulgaricus.jpg"},
-    {"nama": "Streptococcus thermophilus", "deskripsi": "Bekerja sama dengan Lactobacillus dalam yoghurt.", "file": "streptococcus_thermophilus.jpg"},
-    {"nama": "Rhizopus oligosporus", "deskripsi": "Jamur utama dalam pembuatan tempe.", "file": "rhizopus_oligosporus.jpg"},
-    {"nama": "Neurospora sitophila", "deskripsi": "Jamur untuk membuat oncom.", "file": "neurospora_sitophila.jpg"},
-    {"nama": "Acetobacter xylinum", "deskripsi": "Digunakan untuk membuat nata de coco.", "file": "acetobacter_xylinum.jpg"},
-    {"nama": "Aspergillus oryzae", "deskripsi": "Jamur untuk fermentasi kecap dan miso.", "file": "aspergillus_oryzae.jpg"},
-    {"nama": "Lactobacillus acidophilus", "deskripsi": "Probiotik yang baik untuk pencernaan.", "file": "lactobacillus_acidophilus.jpg"},
-    {"nama": "Bifidobacterium bifidum", "deskripsi": "Probiotik dalam usus manusia.", "file": "bifidobacterium_bifidum.jpg"},
-    {"nama": "Penicillium roqueforti", "deskripsi": "Jamur untuk keju biru.", "file": "penicillium_roqueforti.jpg"},
-    {"nama": "Penicillium camemberti", "deskripsi": "Jamur untuk keju camembert.", "file": "penicillium_camemberti.jpg"},
-    {"nama": "Clostridium botulinum", "deskripsi": "Penyebab botulisme, sangat beracun.", "file": "clostridium_botulinum.jpg"},
-    {"nama": "Escherichia coli", "deskripsi": "Bakteri yang bisa menyebabkan diare parah.", "file": "escherichia_coli.jpg"},
-    {"nama": "Salmonella enterica", "deskripsi": "Penyebab umum keracunan makanan.", "file": "salmonella_enterica.jpg"},
-    {"nama": "Listeria monocytogenes", "deskripsi": "Berbahaya terutama untuk ibu hamil.", "file": "listeria_monocytogenes.jpg"},
-    {"nama": "Vibrio cholerae", "deskripsi": "Penyebab kolera.", "file": "vibrio_cholerae.jpg"},
-    {"nama": "Campylobacter jejuni", "deskripsi": "Penyebab umum gastroenteritis.", "file": "campylobacter_jejuni.jpg"},
-    {"nama": "Bacillus cereus", "deskripsi": "Bisa mencemari makanan dan menyebabkan muntah.", "file": "bacillus_cereus.jpg"},
-    {"nama": "Pseudomonas aeruginosa", "deskripsi": "Bisa tumbuh di makanan dan menyebabkan infeksi.", "file": "pseudomonas_aeruginosa.jpg"},
-    {"nama": "Staphylococcus aureus", "deskripsi": "Menghasilkan racun yang menyebabkan keracunan.", "file": "staphylococcus_aureus.jpg"},
-]
-
-# Menampilkan mikroba satu per satu
-for mikroba in mikroba_list:
-    st.subheader(mikroba["nama"])
-    st.write(mikroba["deskripsi"])
-
-    image_path = os.path.join(image_folder, mikroba["file"])
+# Fungsi untuk seksi "Library"
+def library_section():
+    st.title('🍽️ Library - Ensiklopedia Mikroorganisme dalam Makanan')
+    st.markdown("""
+    Di sini Anda bisa mengetahui berbagai mikroba yang ditemukan dalam makanan serta informasi terkait gejala infeksi, penanganan, dan pencegahan.
+    Pilih mikroba di bawah untuk melihat detail informasi.
+    """)
     
-    if os.path.exists(image_path):
-        image = Image.open(image_path)
-        st.image(image, use_column_width=True)
-    else:
-        st.warning(f"Gambar tidak ditemukan: {mikroba['file']}")
+    # Sidebar untuk memilih mikroba
+    microbe_choice = st.sidebar.selectbox('Pilih Mikroba', list(microbes_data.keys()))
+
+    # Menampilkan informasi mikroba yang dipilih
+    microbe = microbes_data[microbe_choice]
+
+    st.header(f"🔬 {microbe_choice}")
+    st.subheader("Deskripsi:")
+    st.write(microbe["Description"])
+
+    st.subheader("Sejarah Penemuan:")
+    st.write(microbe["History"])
+
+    st.subheader("Sumber Kontaminasi:")
+    st.write(microbe["Source"])
+
+    st.subheader("Gejala Infeksi:")
+    st.write(microbe["Symptoms"])
+
+    st.subheader("Pencegahan dan Penanganan:")
+    st.write(microbe["Prevention"])
+
+    st.subheader("Penanganan jika Terpapar:")
+    st.write(microbe["Handling"])
+
+# Fungsi untuk seksi "Petri Panic" (game tebak-tebakan mikroba)
+def petri_panic_game():
+    st.title("🎮 Petri Panic - Tebak Mikroba")
+    st.markdown("""
+    Selamat datang di game **Petri Panic**! 
+    Anda akan diberikan petunjuk tentang mikroba yang ada dalam makanan. Tebak nama mikroba tersebut!
+    """)
     
-    st.markdown("---")
+    # Memilih mikroba secara acak
+    microbes_list = list(microbes_data.keys())
+    correct_microbe = random.choice(microbes_list)
+    clue = microbes_data[correct_microbe]["Description"]
+
+    # Memulai game
+    st.subheader("Petunjuk:")
+    st.write(clue)
+
+    user_guess = st.text_input("Tebak nama mikroba:")
+
+    if user_guess.lower() == correct_microbe.lower():
+        st.success("Selamat! Jawaban Anda benar.")
+    elif user_guess != "":
+        st.error("Tebakan Anda salah. Coba lagi!")
+
+# Menu utama aplikasi
+st.sidebar.title("Menu")
+menu = st.sidebar.radio("Pilih Seksi", ["Library", "Petri Panic"])
+
+if menu == "Library":
+    library_section()
+elif menu == "Petri Panic":
+    petri_panic_game()
 
