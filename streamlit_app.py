@@ -183,6 +183,12 @@ questions = [
         "explanation": "Vibrio parahaemolyticus adalah bakteri yang sering ditemukan pada makanan laut mentah atau setengah matang dan dapat menyebabkan gastroenteritis."
     },
     {
+        "question": "Mikroba yang menyebabkan keracunan makanan akibat makanan yang terkontaminasi dengan racun yang dihasilkan oleh bakteri adalah?",
+        "options": ["Staphylococcus aureus", "Escherichia coli", "Clostridium botulinum", "Salmonella", "Bacillus cereus"],
+        "answer": "Staphylococcus aureus",
+        "explanation": "Staphylococcus aureus menghasilkan racun yang menyebabkan keracunan makanan, terutama pada makanan yang disimpan dalam suhu yang salah."
+    },
+    {
         "question": "Mikroba yang dapat menghasilkan aflatoksin, yang berpotensi menyebabkan kanker hati adalah?",
         "options": ["Aspergillus flavus", "Clostridium perfringens", "Shigella", "Yersinia enterocolitica", "Staphylococcus aureus"],
         "answer": "Aspergillus flavus",
@@ -195,13 +201,7 @@ questions = [
         "explanation": "Campylobacter jejuni adalah bakteri yang dapat menyebabkan diare berdarah dan sering ditemukan pada daging ayam yang tidak dimasak dengan benar."
     },
     {
-        "question": "Mikroba yang menyebabkan keracunan makanan akibat makanan yang terkontaminasi dengan racun yang dihasilkan oleh bakteri adalah?",
-        "options": ["Staphylococcus aureus", "Escherichia coli", "Clostridium botulinum", "Salmonella", "Bacillus cereus"],
-        "answer": "Staphylococcus aureus",
-        "explanation": "Staphylococcus aureus menghasilkan racun yang menyebabkan keracunan makanan, terutama pada makanan yang disimpan dalam suhu yang salah."
-    },
-    {
-        "question": "Mikroba yang dapat menyebabkan penyakit antraks pada manusia adalah?",
+        "question": "Mikroba yang menyebabkan penyakit antraks pada manusia adalah?",
         "options": ["Bacillus anthracis", "Clostridium perfringens", "Campylobacter jejuni", "Vibrio cholerae", "Shigella"],
         "answer": "Bacillus anthracis",
         "explanation": "Bacillus anthracis adalah bakteri yang menyebabkan penyakit antraks pada manusia, dapat tertular melalui kontak dengan produk hewan."
@@ -236,48 +236,33 @@ questions = [
 def petri_panic_page():
     st.title("Petri Panic Game!")
     score = 0
-    for question in questions:
+    answers = {}
+
+    # Iterate through the questions
+    for idx, question in enumerate(questions):
         st.write(question["question"])
         
-        # Pilihan Ganda tanpa jawaban yang terisi otomatis
-        answer = st.radio("Pilih jawaban:", question["options"], key=question["question"])
+        # Pilihan Ganda yang kosong (belum ada yang terisi)
+        answer = st.radio("Pilih jawaban:", question["options"], key=f"question_{idx}")
+        
+        # Menyimpan jawaban pengguna
+        answers[idx] = answer
 
-        # Tampilan jawaban setelah memilih
-        if st.button("Submit", key=f"submit_{question['question']}"):
+    # Tombol untuk submit dan memberikan feedback
+    if st.button("Submit"):
+        for idx, question in enumerate(questions):
+            answer = answers[idx]
             if answer == question["answer"]:
                 score += 1
-                st.markdown('<span style="color: green;">Jawaban Benar!</span>', unsafe_allow_html=True)
+                st.markdown(f'<span style="color: green;">Jawaban benar: {question["answer"]}</span>', unsafe_allow_html=True)
             else:
-                st.markdown('<span style="color: red;">Jawaban Salah!</span>', unsafe_allow_html=True)
-        
-            st.write(f"Jawaban yang benar: {question['answer']}")
+                st.markdown(f'<span style="color: red;">Jawaban salah: {answer}</span>', unsafe_allow_html=True)
+
+            # Menampilkan penjelasan
             st.write(f"Penjelasan: {question['explanation']}")
             st.write("------")
 
-    st.write(f"Skor Anda: {score}/{len(questions)}")
-
-
-# Function untuk menampilkan halaman "Petri Panic" (Game)
-def petri_panic_page():
-    st.title("Petri Panic Game!")
-    score = 0
-    for question in questions:
-        st.write(question["question"])
-        answer = st.radio("Pilih jawaban:", question["options"], key=question["question"])
-
-        # Tampilan jawaban setelah memilih
-        if st.button("Submit", key=f"submit_{question['question']}"):
-            if answer == question["answer"]:
-                score += 1
-                st.markdown('<span style="color: green;">Jawaban Benar!</span>', unsafe_allow_html=True)
-            else:
-                st.markdown('<span style="color: red;">Jawaban Salah!</span>', unsafe_allow_html=True)
-        
-            st.write(f"Jawaban yang benar: {question['answer']}")
-            st.write(f"Penjelasan: {question['explanation']}")
-            st.write("------")
-
-    st.write(f"Skor Anda: {score}/{len(questions)}")
+        st.write(f"Skor Anda: {score}/{len(questions)}")
 
 # Main Menu
 def main():
