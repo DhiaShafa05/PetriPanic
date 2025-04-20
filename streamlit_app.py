@@ -168,23 +168,89 @@ def library_page():
     st.write(f"**Prevention**: {microbes_data[microbe_choice]['Prevention']}")
     st.write(f"**Handling**: {microbes_data[microbe_choice]['Handling']}")
 
+# Soal untuk Mode Petri Panic (10 Soal Pilihan Ganda)
+questions = [
+    {
+        "question": "Mikroba yang sering ditemukan dalam produk susu yang tidak dipasteurisasi dan dapat menyebabkan listeriosis adalah?",
+        "options": ["Salmonella", "Listeria monocytogenes", "E. coli", "Campylobacter", "Staphylococcus aureus"],
+        "answer": "Listeria monocytogenes",
+        "explanation": "Listeria monocytogenes adalah bakteri yang dapat menyebabkan listeriosis, terutama pada ibu hamil dan individu dengan sistem kekebalan tubuh yang lemah."
+    },
+    {
+        "question": "Mikroba yang menyebabkan keracunan makanan akibat konsumsi makanan laut yang tidak dimasak dengan benar adalah?",
+        "options": ["Clostridium botulinum", "Vibrio cholerae", "Vibrio parahaemolyticus", "Escherichia coli", "Salmonella"],
+        "answer": "Vibrio parahaemolyticus",
+        "explanation": "Vibrio parahaemolyticus adalah bakteri yang sering ditemukan pada makanan laut mentah atau setengah matang dan dapat menyebabkan gastroenteritis."
+    },
+    {
+        "question": "Mikroba yang dapat menghasilkan aflatoksin, yang berpotensi menyebabkan kanker hati adalah?",
+        "options": ["Aspergillus flavus", "Clostridium perfringens", "Shigella", "Yersinia enterocolitica", "Staphylococcus aureus"],
+        "answer": "Aspergillus flavus",
+        "explanation": "Aspergillus flavus adalah jamur yang dapat menghasilkan aflatoksin, senyawa yang sangat berbahaya bagi manusia dan berisiko menyebabkan kanker hati."
+    },
+    {
+        "question": "Bakteri penyebab diare berdarah dan sering ditemukan pada daging yang tidak dimasak sempurna adalah?",
+        "options": ["Salmonella", "Campylobacter jejuni", "Staphylococcus aureus", "Bacillus cereus", "Listeria monocytogenes"],
+        "answer": "Campylobacter jejuni",
+        "explanation": "Campylobacter jejuni adalah bakteri yang dapat menyebabkan diare berdarah dan sering ditemukan pada daging ayam yang tidak dimasak dengan benar."
+    },
+    {
+        "question": "Mikroba yang menyebabkan keracunan makanan akibat makanan yang terkontaminasi dengan racun yang dihasilkan oleh bakteri adalah?",
+        "options": ["Staphylococcus aureus", "Escherichia coli", "Clostridium botulinum", "Salmonella", "Bacillus cereus"],
+        "answer": "Staphylococcus aureus",
+        "explanation": "Staphylococcus aureus menghasilkan racun yang menyebabkan keracunan makanan, terutama pada makanan yang disimpan dalam suhu yang salah."
+    },
+    {
+        "question": "Mikroba yang dapat menyebabkan penyakit antraks pada manusia adalah?",
+        "options": ["Bacillus anthracis", "Clostridium perfringens", "Campylobacter jejuni", "Vibrio cholerae", "Shigella"],
+        "answer": "Bacillus anthracis",
+        "explanation": "Bacillus anthracis adalah bakteri yang menyebabkan penyakit antraks pada manusia, dapat tertular melalui kontak dengan produk hewan."
+    },
+    {
+        "question": "Bakteri yang menyebabkan penyakit kolera dan dapat ditularkan melalui air yang terkontaminasi adalah?",
+        "options": ["Campylobacter jejuni", "Vibrio cholerae", "Listeria monocytogenes", "Escherichia coli", "Salmonella"],
+        "answer": "Vibrio cholerae",
+        "explanation": "Vibrio cholerae menyebabkan kolera yang ditularkan melalui konsumsi air yang terkontaminasi oleh feses manusia atau hewan."
+    },
+    {
+        "question": "Mikroba yang menyebabkan infeksi lambung dan dapat menyebabkan tukak lambung adalah?",
+        "options": ["Helicobacter pylori", "Shigella", "Bacillus cereus", "Campylobacter jejuni", "Aspergillus flavus"],
+        "answer": "Helicobacter pylori",
+        "explanation": "Helicobacter pylori adalah bakteri yang menyebabkan tukak lambung dan masalah pencernaan lainnya."
+    },
+    {
+        "question": "Bakteri yang sering ditemukan pada makanan yang tidak disimpan dengan benar dan menyebabkan keracunan makanan adalah?",
+        "options": ["Clostridium perfringens", "Listeria monocytogenes", "Campylobacter jejuni", "Escherichia coli", "Staphylococcus aureus"],
+        "answer": "Clostridium perfringens",
+        "explanation": "Clostridium perfringens adalah bakteri yang dapat menyebabkan keracunan makanan akibat pertumbuhan di makanan yang tidak disimpan dengan benar pada suhu yang salah."
+    },
+    {
+        "question": "Mikroba yang dapat menyebabkan keracunan makanan serius dari makanan kalengan yang tidak diproses dengan benar adalah?",
+        "options": ["Clostridium botulinum", "Staphylococcus aureus", "Vibrio cholerae", "E. coli", "Salmonella"],
+        "answer": "Clostridium botulinum",
+        "explanation": "Clostridium botulinum menghasilkan racun botulinum yang sangat berbahaya bagi manusia, terutama pada makanan kalengan yang tidak diproses dengan benar."
+    },
+]
+
 # Function untuk menampilkan halaman "Petri Panic" (Game)
 def petri_panic_page():
     st.title("Petri Panic Game!")
     score = 0
     for question in questions:
         st.write(question["question"])
-        answer = st.radio("Pilih jawaban:", question["options"])
-        
-        if st.button("Submit"):
+        answer = st.radio("Pilih jawaban:", question["options"], key=question["question"])
+
+        # Tampilan jawaban setelah memilih
+        if st.button("Submit", key=f"submit_{question['question']}"):
             if answer == question["answer"]:
                 score += 1
                 st.markdown('<span style="color: green;">Jawaban Benar!</span>', unsafe_allow_html=True)
             else:
                 st.markdown('<span style="color: red;">Jawaban Salah!</span>', unsafe_allow_html=True)
         
-        st.write(f"Jawaban yang benar: {question['answer']}")
-        st.write(f"Penjelasan: {question['explanation']}")
+            st.write(f"Jawaban yang benar: {question['answer']}")
+            st.write(f"Penjelasan: {question['explanation']}")
+            st.write("------")
 
     st.write(f"Skor Anda: {score}/{len(questions)}")
 
