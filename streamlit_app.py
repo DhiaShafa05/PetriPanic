@@ -1,278 +1,381 @@
 import streamlit as st
+import random
 
-# Data Mikroba (30 Jenis)
-microbes_data = {
-    "Salmonella": {
-        "Description": "Salmonella adalah bakteri yang sering ditemukan dalam produk hewani seperti telur dan daging ayam.",
-        "History": "Ditemukan oleh Theobald Smith pada tahun 1885.",
-        "Source": "Telur, daging ayam, produk susu yang terkontaminasi.",
-        "Symptoms": "Diare, demam, mual, kram perut.",
-        "Prevention": "Memasak makanan hingga matang sempurna dan mencuci tangan secara menyeluruh.",
-        "Handling": "Jika terinfeksi, minum banyak cairan dan berkonsultasilah dengan dokter."
-    },
-    "Escherichia coli (E. coli)": {
-        "Description": "E. coli adalah bakteri yang biasanya ditemukan di usus manusia dan hewan.",
-        "History": "Ditemukan pada tahun 1885 oleh Theodor Escherich.",
-        "Source": "Daging mentah, sayuran mentah yang terkontaminasi.",
-        "Symptoms": "Diare berdarah, sakit perut, demam.",
-        "Prevention": "Memasak daging hingga suhu yang aman dan mencuci sayuran dengan benar.",
-        "Handling": "Jika terinfeksi, segera konsultasikan dengan tenaga medis."
-    },
-    "Staphylococcus aureus": {
-        "Description": "Staphylococcus aureus adalah bakteri yang dapat menghasilkan racun yang menyebabkan keracunan makanan.",
-        "History": "Ditemukan oleh Alexander Ogston pada tahun 1880.",
-        "Source": "Makanan yang terkontaminasi oleh bakteri ini, seperti produk daging, telur, atau makanan yang disimpan pada suhu yang tidak tepat.",
-        "Symptoms": "Muntah, diare, kram perut.",
-        "Prevention": "Menjaga suhu makanan tetap aman dan menghindari makanan yang telah terkontaminasi.",
-        "Handling": "Jika terpapar, gejala biasanya akan hilang dalam beberapa jam. Namun, jika parah, segera cari perawatan medis."
-    },
-    "Listeria monocytogenes": {
-        "Description": "Listeria monocytogenes adalah bakteri yang dapat menyebabkan penyakit serius seperti listeriosis.",
-        "History": "Ditemukan pada tahun 1924 oleh E.G.D. Murray.",
-        "Source": "Produk susu yang tidak dipasteurisasi, daging yang tidak dimasak dengan benar.",
-        "Symptoms": "Demam, nyeri otot, sakit kepala, mual.",
-        "Prevention": "Menghindari konsumsi produk susu yang tidak dipasteurisasi, memasak makanan dengan suhu yang aman.",
-        "Handling": "Segera dapatkan pengobatan antibiotik jika terinfeksi, terutama jika hamil atau memiliki sistem kekebalan tubuh yang lemah."
-    },
-    "Campylobacter jejuni": {
-        "Description": "Campylobacter jejuni adalah bakteri yang menyebabkan penyakit yang dikenal sebagai campylobacteriosis.",
-        "History": "Ditemukan pada tahun 1972 oleh Bruce R. B. Bell.",
-        "Source": "Daging ayam yang tidak dimasak dengan benar, susu mentah.",
-        "Symptoms": "Diare, demam, mual, kram perut.",
-        "Prevention": "Memasak daging ayam hingga matang sempurna dan mencuci tangan setelah menangani makanan mentah.",
-        "Handling": "Biasanya sembuh dalam beberapa hari tanpa pengobatan, tetapi penting untuk menghindari dehidrasi."
-    },
-    "Bacillus anthracis": {
-        "Description": "Bacillus anthracis adalah bakteri penyebab penyakit antraks yang bisa menular melalui kontak dengan produk hewan.",
-        "History": "Ditemukan oleh Robert Koch pada tahun 1877.",
-        "Source": "Produk hewani yang tidak dimasak dengan benar.",
-        "Symptoms": "Demam, batuk, nyeri dada, sesak napas, dan pada beberapa kasus, infeksi kulit.",
-        "Prevention": "Memasak daging hingga suhu internal yang aman, menghindari konsumsi produk hewani yang terkontaminasi.",
-        "Handling": "Jika terpapar, segera dapatkan perawatan medis, biasanya dengan antibiotik."
-    },
-    "Aspergillus flavus": {
-        "Description": "Aspergillus flavus adalah jamur yang dapat menghasilkan aflatoksin, sebuah toksin yang sangat berbahaya bagi manusia.",
-        "History": "Ditemukan pada tahun 1943.",
-        "Source": "Kacang tanah, jagung, produk biji-bijian yang disimpan dalam kondisi lembab.",
-        "Symptoms": "Keracunan makanan, gangguan hati, bahkan kanker hati jika terpapar dalam jumlah besar.",
-        "Prevention": "Menjaga makanan pada suhu yang kering dan sejuk, menghindari makanan yang telah terkontaminasi jamur.",
-        "Handling": "Jika terpapar, hindari konsumsi makanan yang terkontaminasi dan konsultasikan dengan tenaga medis."
-    },
-    "Clostridium botulinum": {
-        "Description": "Clostridium botulinum adalah bakteri yang menghasilkan racun botulinum yang dapat menyebabkan keracunan makanan.",
-        "History": "Ditemukan pada tahun 1895 oleh Emile van Ermengem.",
-        "Source": "Makanan kalengan yang tidak diproses dengan benar, produk hewani yang terkontaminasi.",
-        "Symptoms": "Kelumpuhan otot, kesulitan bernapas, dan dalam kasus parah, kematian.",
-        "Prevention": "Memasak makanan dengan benar dan memastikan produk kalengan diproses dengan suhu yang tepat.",
-        "Handling": "Jika terinfeksi, segera periksakan diri ke dokter dan dapatkan pengobatan berupa antitoksin botulinum."
-    },
-    "Vibrio cholerae": {
-        "Description": "Vibrio cholerae adalah bakteri penyebab kolera yang ditularkan melalui air dan makanan yang terkontaminasi.",
-        "History": "Ditemukan pada tahun 1854 oleh Robert Koch.",
-        "Source": "Air yang terkontaminasi, makanan laut yang tidak dimasak dengan baik.",
-        "Symptoms": "Diare parah, dehidrasi, muntah.",
-        "Prevention": "Menghindari konsumsi air yang tidak terjamin kebersihannya dan memastikan makanan laut dimasak dengan benar.",
-        "Handling": "Jika terinfeksi, segera rehidrasi dan konsultasikan dengan dokter untuk pengobatan lebih lanjut."
-    },
-    "Shigella": {
-        "Description": "Shigella adalah bakteri yang menyebabkan penyakit shigellosis, sering ditularkan melalui kontak langsung dengan feses yang terkontaminasi.",
-        "History": "Ditemukan pada tahun 1897 oleh Kiyoshi Shiga.",
-        "Source": "Makanan atau air yang terkontaminasi dengan feses.",
-        "Symptoms": "Diare berdarah, kram perut, demam.",
-        "Prevention": "Menjaga kebersihan tangan dan sanitasi yang baik.",
-        "Handling": "Jika terinfeksi, minum banyak cairan dan segera konsultasikan dengan tenaga medis."
-    },
-    "Trichinella spiralis": {
-        "Description": "Trichinella spiralis adalah parasit penyebab trichinosis yang dapat ditularkan melalui konsumsi daging yang tidak dimasak dengan benar.",
-        "History": "Ditemukan pada tahun 1835 oleh Richard Owen.",
-        "Source": "Daging babi atau produk daging yang tidak dimasak dengan baik.",
-        "Symptoms": "Sakit perut, mual, demam, nyeri otot.",
-        "Prevention": "Memasak daging hingga suhu yang aman untuk membunuh parasit.",
-        "Handling": "Jika terinfeksi, pengobatan dengan obat anti-parasit dapat diberikan."
-    },
-    "Norovirus": {
-        "Description": "Norovirus adalah virus yang dapat menyebabkan gastroenteritis atau infeksi saluran pencernaan.",
-        "History": "Ditemukan pada tahun 1972.",
-        "Source": "Makanan atau air yang terkontaminasi, serta kontak dengan orang yang terinfeksi.",
-        "Symptoms": "Mual, muntah, diare, sakit perut.",
-        "Prevention": "Menjaga kebersihan tangan, menghindari konsumsi makanan yang terkontaminasi.",
-        "Handling": "Biasanya sembuh dalam beberapa hari tanpa pengobatan khusus, tetapi penting untuk tetap terhidrasi."
-    },
-    # Tambah 20 jenis mikroba lainnya
-    "Bacillus cereus": {
-        "Description": "Bacillus cereus adalah bakteri yang dapat menyebabkan keracunan makanan, terutama dari nasi yang tidak disimpan dengan baik.",
-        "History": "Ditemukan pada tahun 1955.",
-        "Source": "Nasi yang dimasak dan dibiarkan pada suhu kamar terlalu lama.",
-        "Symptoms": "Mual, diare, kram perut.",
-        "Prevention": "Menyimpan nasi di suhu yang aman dan tidak membiarkannya pada suhu kamar terlalu lama.",
-        "Handling": "Jika terinfeksi, gejala biasanya hilang dalam beberapa jam tanpa perawatan medis."
-    },
-    "Yersinia enterocolitica": {
-        "Description": "Yersinia enterocolitica adalah bakteri yang dapat menyebabkan yersiniosis.",
-        "History": "Ditemukan pada tahun 1957.",
-        "Source": "Daging babi, susu yang tidak dipasteurisasi, sayuran yang terkontaminasi.",
-        "Symptoms": "Demam, diare, sakit perut.",
-        "Prevention": "Memasak daging hingga matang dan menghindari konsumsi susu yang tidak dipasteurisasi.",
-        "Handling": "Biasanya sembuh dalam waktu beberapa minggu, tetapi terkadang membutuhkan pengobatan antibiotik."
-    },
-    "Toxoplasma gondii": {
-        "Description": "Toxoplasma gondii adalah parasit penyebab toksoplasmosis, terutama berbahaya bagi wanita hamil.",
-        "History": "Ditemukan pada tahun 1908.",
-        "Source": "Daging yang tidak dimasak dengan baik, terutama daging domba dan kucing yang terinfeksi.",
-        "Symptoms": "Gejala flu, tetapi dapat menyebabkan masalah serius pada bayi yang terinfeksi dalam kandungan.",
-        "Prevention": "Memasak daging dengan baik dan mencuci tangan setelah menangani hewan atau daging mentah.",
-        "Handling": "Konsultasikan dengan dokter jika hamil dan terpapar parasit ini."
-    },
-    "Cryptosporidium": {
-        "Description": "Cryptosporidium adalah parasit penyebab cryptosporidiosis, infeksi yang disebabkan oleh konsumsi air yang terkontaminasi.",
-        "History": "Ditemukan pada tahun 1976.",
-        "Source": "Air yang terkontaminasi dengan feses hewan atau manusia.",
-        "Symptoms": "Diare, kram perut, demam.",
-        "Prevention": "Menghindari konsumsi air yang tidak terjamin kebersihannya dan menjaga kebersihan."
-    },
-    "Vibrio parahaemolyticus": {
-        "Description": "Vibrio parahaemolyticus adalah bakteri penyebab infeksi yang ditularkan melalui konsumsi makanan laut yang tidak dimasak dengan benar.",
-        "History": "Ditemukan pada tahun 1951.",
-        "Source": "Makanan laut mentah atau setengah matang.",
-        "Symptoms": "Diare, muntah, demam.",
-        "Prevention": "Memasak makanan laut hingga matang sempurna.",
-        "Handling": "Jika terinfeksi, biasanya sembuh dengan sendirinya dalam beberapa hari."
-    },
-    "Clostridium perfringens": {
-        "Description": "Clostridium perfringens adalah bakteri yang sering ditemukan pada makanan yang disimpan dalam suhu yang tidak aman.",
-        "History": "Ditemukan pada tahun 1892.",
-        "Source": "Daging yang terkontaminasi dan disimpan pada suhu yang tidak aman.",
-        "Symptoms": "Diare, kram perut.",
-        "Prevention": "Memasak dan menyimpan makanan dengan benar, menjaga suhu makanan."
-    },
-    "Helicobacter pylori": {
-        "Description": "Helicobacter pylori adalah bakteri yang dapat menyebabkan tukak lambung atau infeksi pada sistem pencernaan.",
-        "History": "Ditemukan pada tahun 1982 oleh Barry Marshall dan Robin Warren.",
-        "Source": "Daging yang terkontaminasi, makanan yang terkontaminasi.",
-        "Symptoms": "Nyeri ulu hati, mual, perut kembung.",
-        "Prevention": "Menjaga kebersihan makanan dan air."
-    },
-    # ... Tambahkan sisa mikroba lainnya
-}
+st.set_page_config(page_title="Microbiologi Pangan - Encyclopedia", layout="wide")
+st.title("🧫 Microbiologi Pangan - Encyclopedia")
 
-# Function untuk menampilkan halaman "Library"
-def library_page():
-    st.title("Food's Microorganism Encyclopedia")
-    st.write("Selamat datang di ensiklopedia mikroorganisme pangan.")
-    microbe_choice = st.selectbox("Pilih mikroba untuk mempelajari lebih lanjut:", list(microbes_data.keys()))
-    st.write(f"**{microbe_choice}**")
-    st.write(f"**Description**: {microbes_data[microbe_choice]['Description']}")
-    st.write(f"**History**: {microbes_data[microbe_choice]['History']}")
-    st.write(f"**Source**: {microbes_data[microbe_choice]['Source']}")
-    st.write(f"**Symptoms**: {microbes_data[microbe_choice]['Symptoms']}")
-    st.write(f"**Prevention**: {microbes_data[microbe_choice]['Prevention']}")
-    st.write(f"**Handling**: {microbes_data[microbe_choice]['Handling']}")
+mode = st.sidebar.selectbox("Pilih Mode", ["Library", "Petri Panic"])
 
-# Soal untuk Mode Petri Panic (10 Soal Pilihan Ganda)
-questions = [
+# Data 30 mikroorganisme
+library_data = [
+    {"nama": "Salmonella enterica", "familia": "Enterobacteriaceae", "deskripsi": "Batang Gram-negatif, motil, tidak membentuk spora.", "sejarah": "Ditemukan oleh Dr. Daniel E. Salmon, USA, 1885.", "makanan_terkait": "Daging ayam mentah, telur mentah.", "alasan_makanan": "Sering mencemari daging unggas dan telur melalui pencernaan hewan.", "penanganan": "Antibiotik dan hidrasi intensif.", "pencegahan": "Masak daging dan telur sampai matang sempurna."},
+    {"nama": "Escherichia coli O157:H7", "familia": "Enterobacteriaceae", "deskripsi": "Batang Gram-negatif, motil.", "sejarah": "Diidentifikasi sebagai patogen makanan tahun 1982, USA.", "makanan_terkait": "Daging sapi mentah, sayuran mentah.", "alasan_makanan": "Kontaminasi feses saat penyembelihan.", "penanganan": "Perawatan suportif, hindari antibiotik pada kasus parah.", "pencegahan": "Masak daging dengan suhu aman, cuci sayuran."},
     {
-        "question": "Mikroba yang sering ditemukan dalam produk susu yang tidak dipasteurisasi dan dapat menyebabkan listeriosis adalah?",
-        "options": ["Salmonella", "Listeria monocytogenes", "E. coli", "Campylobacter", "Staphylococcus aureus"],
-        "answer": "Listeria monocytogenes",
-        "explanation": "Listeria monocytogenes adalah bakteri yang dapat menyebabkan listeriosis, terutama pada ibu hamil dan individu dengan sistem kekebalan tubuh yang lemah."
+        "nama": "Campylobacter jejuni",
+        "familia": "Campylobacteraceae",
+        "deskripsi": "Spiral atau kurva, Gram-negatif, mikroaerofilik.",
+        "sejarah": "Diidentifikasi pada 1972 sebagai patogen makanan.",
+        "makanan_terkait": "Daging unggas mentah, susu tidak dipasteurisasi.",
+        "alasan_makanan": "Biasa terdapat pada usus unggas dan mentransfer ke daging.",
+        "penanganan": "Rehidrasi, kadang antibiotik seperti azitromisin.",
+        "pencegahan": "Masak ayam sampai matang dan cuci peralatan masak."
     },
     {
-        "question": "Mikroba yang menyebabkan keracunan makanan akibat konsumsi makanan laut yang tidak dimasak dengan benar adalah?",
-        "options": ["Clostridium botulinum", "Vibrio cholerae", "Vibrio parahaemolyticus", "Escherichia coli", "Salmonella"],
-        "answer": "Vibrio parahaemolyticus",
-        "explanation": "Vibrio parahaemolyticus adalah bakteri yang sering ditemukan pada makanan laut mentah atau setengah matang dan dapat menyebabkan gastroenteritis."
+        "nama": "Staphylococcus aureus",
+        "familia": "Staphylococcaceae",
+        "deskripsi": "Kokus Gram-positif, non-motil, membentuk racun enterotoksin.",
+        "sejarah": "Dikenal sebagai penyebab keracunan makanan sejak awal abad ke-20.",
+        "makanan_terkait": "Krim, daging olahan, salad kentang.",
+        "alasan_makanan": "Racun diproduksi saat pertumbuhan bakteri pada makanan.",
+        "penanganan": "Istirahat dan hidrasi; racun resisten panas.",
+        "pencegahan": "Simpan makanan pada suhu aman dan hindari kontaminasi."
     },
     {
-        "question": "Mikroba yang menyebabkan keracunan makanan akibat makanan yang terkontaminasi dengan racun yang dihasilkan oleh bakteri adalah?",
-        "options": ["Staphylococcus aureus", "Escherichia coli", "Clostridium botulinum", "Salmonella", "Bacillus cereus"],
-        "answer": "Staphylococcus aureus",
-        "explanation": "Staphylococcus aureus menghasilkan racun yang menyebabkan keracunan makanan, terutama pada makanan yang disimpan dalam suhu yang salah."
+        "nama": "Bacillus cereus",
+        "familia": "Bacillaceae",
+        "deskripsi": "Bentuk batang, Gram-positif, aerob dan menghasilkan spora.",
+        "sejarah": "Dikenal menyebabkan keracunan makanan sejak 1950-an.",
+        "makanan_terkait": "Nasi, pasta, kentang.",
+        "alasan_makanan": "Spora tahan panas tumbuh saat penyimpanan makanan buruk.",
+        "penanganan": "Gejala ringan, sering sembuh sendiri.",
+        "pencegahan": "Simpan makanan panas atau dingin, jangan di suhu ruang."
     },
     {
-        "question": "Mikroba yang dapat menghasilkan aflatoksin, yang berpotensi menyebabkan kanker hati adalah?",
-        "options": ["Aspergillus flavus", "Clostridium perfringens", "Shigella", "Yersinia enterocolitica", "Staphylococcus aureus"],
-        "answer": "Aspergillus flavus",
-        "explanation": "Aspergillus flavus adalah jamur yang dapat menghasilkan aflatoksin, senyawa yang sangat berbahaya bagi manusia dan berisiko menyebabkan kanker hati."
+        "nama": "Clostridium botulinum",
+        "familia": "Clostridiaceae",
+        "deskripsi": "Batang Gram-positif, anaerob, membentuk spora dan neurotoksin.",
+        "sejarah": "Ditemukan pada akhir abad ke-19 oleh Emile van Ermengem.",
+        "makanan_terkait": "Makanan kaleng rumah, daging fermentasi.",
+        "alasan_makanan": "Kondisi anaerob dalam makanan kaleng mendukung pertumbuhan.",
+        "penanganan": "Antitoksin dan rawat inap darurat.",
+        "pencegahan": "Sterilisasi makanan kaleng dengan benar."
     },
     {
-        "question": "Bakteri penyebab diare berdarah dan sering ditemukan pada daging yang tidak dimasak sempurna adalah?",
-        "options": ["Salmonella", "Campylobacter jejuni", "Staphylococcus aureus", "Bacillus cereus", "Listeria monocytogenes"],
-        "answer": "Campylobacter jejuni",
-        "explanation": "Campylobacter jejuni adalah bakteri yang dapat menyebabkan diare berdarah dan sering ditemukan pada daging ayam yang tidak dimasak dengan benar."
+        "nama": "Shigella spp.",
+        "familia": "Enterobacteriaceae",
+        "deskripsi": "Batang kecil, Gram-negatif, tidak motil.",
+        "sejarah": "Ditemukan oleh Kiyoshi Shiga tahun 1897.",
+        "makanan_terkait": "Sayur mentah, makanan yang terkontaminasi tangan.",
+        "alasan_makanan": "Menyebar lewat rute fecal-oral, sangat menular.",
+        "penanganan": "Hidrasi dan antibiotik bila parah.",
+        "pencegahan": "Cuci tangan, kebersihan saat pengolahan makanan."
     },
     {
-        "question": "Mikroba yang menyebabkan penyakit antraks pada manusia adalah?",
-        "options": ["Bacillus anthracis", "Clostridium perfringens", "Campylobacter jejuni", "Vibrio cholerae", "Shigella"],
-        "answer": "Bacillus anthracis",
-        "explanation": "Bacillus anthracis adalah bakteri yang menyebabkan penyakit antraks pada manusia, dapat tertular melalui kontak dengan produk hewan."
+        "nama": "Vibrio cholerae",
+        "familia": "Vibrionaceae",
+        "deskripsi": "Bentuk koma, Gram-negatif, motil dengan flagela tunggal.",
+        "sejarah": "Ditemukan oleh Filippo Pacini pada 1854.",
+        "makanan_terkait": "Air minum dan makanan laut mentah.",
+        "alasan_makanan": "Makanan laut dapat tercemar air terkontaminasi.",
+        "penanganan": "Oralit dan antibiotik dalam kasus berat.",
+        "pencegahan": "Sterilisasi air dan masak makanan laut matang."
     },
     {
-        "question": "Bakteri yang menyebabkan penyakit kolera dan dapat ditularkan melalui air yang terkontaminasi adalah?",
-        "options": ["Campylobacter jejuni", "Vibrio cholerae", "Listeria monocytogenes", "Escherichia coli", "Salmonella"],
-        "answer": "Vibrio cholerae",
-        "explanation": "Vibrio cholerae menyebabkan kolera yang ditularkan melalui konsumsi air yang terkontaminasi oleh feses manusia atau hewan."
+        "nama": "Clostridium perfringens",
+        "familia": "Clostridiaceae",
+        "deskripsi": "Gram-positif, batang pendek, anaerob, membentuk spora.",
+        "sejarah": "Ditemukan tahun 1892 oleh William Welch.",
+        "makanan_terkait": "Daging, kuah daging, makanan besar.",
+        "alasan_makanan": "Tumbuh saat makanan besar disimpan tidak benar.",
+        "penanganan": "Gejala ringan, istirahat dan cairan cukup.",
+        "pencegahan": "Hindari penyimpanan makanan dalam suhu bahaya."
     },
     {
-        "question": "Mikroba yang menyebabkan infeksi lambung dan dapat menyebabkan tukak lambung adalah?",
-        "options": ["Helicobacter pylori", "Shigella", "Bacillus cereus", "Campylobacter jejuni", "Aspergillus flavus"],
-        "answer": "Helicobacter pylori",
-        "explanation": "Helicobacter pylori adalah bakteri yang menyebabkan tukak lambung dan masalah pencernaan lainnya."
+        "nama": "Norovirus",
+        "familia": "Caliciviridae",
+        "deskripsi": "Virus RNA kecil, tidak beramplop, sangat menular.",
+        "sejarah": "Wabah pertama kali tercatat di Norwalk, Ohio, tahun 1972.",
+        "makanan_terkait": "Kerang mentah, makanan olahan oleh tangan terinfeksi.",
+        "alasan_makanan": "Menyebar lewat feses dan muntah pasien.",
+        "penanganan": "Rehidrasi, biasanya sembuh sendiri.",
+        "pencegahan": "Cuci tangan dan sanitasi permukaan."
     },
     {
-        "question": "Bakteri yang sering ditemukan pada makanan yang tidak disimpan dengan benar dan menyebabkan keracunan makanan adalah?",
-        "options": ["Clostridium perfringens", "Listeria monocytogenes", "Campylobacter jejuni", "Escherichia coli", "Staphylococcus aureus"],
-        "answer": "Clostridium perfringens",
-        "explanation": "Clostridium perfringens adalah bakteri yang dapat menyebabkan keracunan makanan akibat pertumbuhan di makanan yang tidak disimpan dengan benar pada suhu yang salah."
+        "nama": "Rotavirus",
+        "familia": "Reoviridae",
+        "deskripsi": "Virus RNA ganda, bentuk seperti roda.",
+        "sejarah": "Ditemukan tahun 1973 oleh Ruth Bishop.",
+        "makanan_terkait": "Makanan/minuman terkontaminasi feses.",
+        "alasan_makanan": "Menular lewat rute fecal-oral, sering terjadi pada anak-anak.",
+        "penanganan": "Oralit, kadang rawat inap untuk bayi.",
+        "pencegahan": "Vaksinasi dan sanitasi."
     },
     {
-        "question": "Mikroba yang dapat menyebabkan keracunan makanan serius dari makanan kalengan yang tidak diproses dengan benar adalah?",
-        "options": ["Clostridium botulinum", "Staphylococcus aureus", "Vibrio cholerae", "E. coli", "Salmonella"],
-        "answer": "Clostridium botulinum",
-        "explanation": "Clostridium botulinum menghasilkan racun botulinum yang sangat berbahaya bagi manusia, terutama pada makanan kalengan yang tidak diproses dengan benar."
+        "nama": "Hepatitis A Virus",
+        "familia": "Picornaviridae",
+        "deskripsi": "Virus RNA kecil, tidak beramplop.",
+        "sejarah": "Diketahui sebagai penyebab hepatitis pada 1970-an.",
+        "makanan_terkait": "Kerang mentah, makanan tercemar air limbah.",
+        "alasan_makanan": "Menyebar lewat feses ke makanan.",
+        "penanganan": "Istirahat dan pengawasan hati.",
+        "pencegahan": "Vaksinasi dan hindari makanan mentah."
     },
+    {
+        "nama": "Yersinia enterocolitica",
+        "familia": "Enterobacteriaceae",
+        "deskripsi": "Batang pendek Gram-negatif, motil pada suhu rendah.",
+        "sejarah": "Ditemukan pada tahun 1939 oleh A. Schleifstein.",
+        "makanan_terkait": "Daging babi, susu mentah.",
+        "alasan_makanan": "Tumbuh baik di suhu kulkas, umum di hewan ternak.",
+        "penanganan": "Biasanya sembuh sendiri, kadang antibiotik.",
+        "pencegahan": "Masak makanan dengan suhu tepat dan pasteurisasi susu."
+    },
+    {
+        "nama": "Enterobacter sakazakii (Cronobacter)",
+        "familia": "Enterobacteriaceae",
+        "deskripsi": "Batang Gram-negatif, fakultatif anaerob.",
+        "sejarah": "Diidentifikasi sebagai patogen neonatus pada 1980-an.",
+        "makanan_terkait": "Susu formula bubuk bayi.",
+        "alasan_makanan": "Dapat mencemari bubuk saat produksi atau penyimpanan.",
+        "penanganan": "Antibiotik dan dukungan intensif untuk bayi.",
+        "pencegahan": "Gunakan air panas untuk membuat susu formula."
+    },
+    {
+        "nama": "Aspergillus flavus",
+        "familia": "Trichocomaceae",
+        "deskripsi": "Jamur penghasil aflatoksin, koloni kekuningan.",
+        "sejarah": "Dikenal sejak 1800-an sebagai kontaminan pangan.",
+        "makanan_terkait": "Kacang tanah, jagung.",
+        "alasan_makanan": "Tumbuh di bahan yang disimpan lembap.",
+        "penanganan": "Buang makanan terkontaminasi.",
+        "pencegahan": "Simpan kering, hindari kerusakan saat panen."
+    },
+    {
+        "nama": "Penicillium expansum",
+        "familia": "Trichocomaceae",
+        "deskripsi": "Jamur penghasil patulin, koloni biru kehijauan.",
+        "sejarah": "Dikenal sebagai jamur pembusuk apel.",
+        "makanan_terkait": "Buah apel dan buah lunak lainnya.",
+        "alasan_makanan": "Masuk lewat luka di permukaan buah.",
+        "penanganan": "Buang buah busuk, jangan konsumsi.",
+        "pencegahan": "Simpan buah dingin dan utuh."
+    },
+    {
+        "nama": "Fusarium spp.",
+        "familia": "Nectriaceae",
+        "deskripsi": "Jamur penghasil mikotoksin, koloni putih hingga merah muda.",
+        "sejarah": "Dikenal sejak abad ke-19 di gandum.",
+        "makanan_terkait": "Sereal, jagung, gandum.",
+        "alasan_makanan": "Infeksi tanaman saat panen dan penyimpanan buruk.",
+        "penanganan": "Hindari konsumsi, monitoring regulasi mikotoksin.",
+        "pencegahan": "Simpan kering, rotasi tanaman."
+    },
+    {
+        "nama": "Alternaria alternata",
+        "familia": "Pleosporaceae",
+        "deskripsi": "Jamur hitam pekat dengan spora besar.",
+        "sejarah": "Dikenal sebagai jamur pembusuk buah dan sayur.",
+        "makanan_terkait": "Tomat, kentang, biji-bijian.",
+        "alasan_makanan": "Tumbuh saat penyimpanan lembap dan luka buah.",
+        "penanganan": "Buang bahan makanan terkontaminasi.",
+        "pencegahan": "Kontrol kelembapan penyimpanan."
+    },
+    {
+        "nama": "Saccharomyces cerevisiae",
+        "familia": "Saccharomycetaceae",
+        "deskripsi": "Ragi berbentuk bulat, kuning krem.",
+        "sejarah": "Digunakan sejak ribuan tahun lalu dalam fermentasi.",
+        "makanan_terkait": "Roti, bir, anggur.",
+        "alasan_makanan": "Digunakan sebagai mikroba fermentasi.",
+        "penanganan": "Umumnya tidak berbahaya, kecuali infeksi oportunistik.",
+        "pencegahan": "Pengawasan higienis di industri fermentasi."
+    },
+    {
+        "nama": "Candida albicans",
+        "familia": "Saccharomycetaceae",
+        "deskripsi": "Ragi oval, sering ditemukan di tubuh manusia.",
+        "sejarah": "Dikenal sebagai penyebab kandidiasis sejak awal abad ke-20.",
+        "makanan_terkait": "Jarang pada makanan, lebih umum pada infeksi manusia.",
+        "alasan_makanan": "Kontaminasi silang dari manusia ke makanan.",
+        "penanganan": "Antijamur sistemik.",
+        "pencegahan": "Sanitasi pekerja makanan."
+    },
+    {
+        "nama": "Rhizopus stolonifer",
+        "familia": "Mucoraceae",
+        "deskripsi": "Jamur roti hitam dengan spora gelap.",
+        "sejarah": "Dikenal sejak lama sebagai jamur pembusuk.",
+        "makanan_terkait": "Roti, buah-buahan lunak.",
+        "alasan_makanan": "Tumbuh cepat pada makanan kaya karbohidrat.",
+        "penanganan": "Buang makanan terkontaminasi.",
+        "pencegahan": "Simpan dalam tempat kering dan dingin."
+    },
+    {
+        "nama": "Pseudomonas fluorescens",
+        "familia": "Pseudomonadaceae",
+        "deskripsi": "Batang Gram-negatif, motil, fluoresens biru-hijau.",
+        "sejarah": "Dikenal sebagai pembusuk produk susu.",
+        "makanan_terkait": "Susu, daging, ikan.",
+        "alasan_makanan": "Tumbuh pada suhu dingin, menyebabkan bau tak sedap.",
+        "penanganan": "Buang produk terkontaminasi.",
+        "pencegahan": "Simpan suhu dingin dan proses cepat."
+    },
+    {
+        "nama": "Aeromonas hydrophila",
+        "familia": "Aeromonadaceae",
+        "deskripsi": "Batang Gram-negatif, motil, sering ditemukan di air tawar.",
+        "sejarah": "Dikenal sebagai patogen air sejak pertengahan abad ke-20.",
+        "makanan_terkait": "Ikan, makanan laut mentah.",
+        "alasan_makanan": "Dapat mencemari air tempat hidup ikan.",
+        "penanganan": "Antibiotik dan perawatan medis.",
+        "pencegahan": "Masak makanan laut matang sempurna."
+    },
+    {
+        "nama": "Mycobacterium avium",
+        "familia": "Mycobacteriaceae",
+        "deskripsi": "Batang tahan asam, tumbuh lambat.",
+        "sejarah": "Ditemukan sebagai patogen air dan makanan sejak 1980-an.",
+        "makanan_terkait": "Air minum, produk susu.",
+        "alasan_makanan": "Tumbuh di biofilm sistem air.",
+        "penanganan": "Antibiotik kombinasi jangka panjang.",
+        "pencegahan": "Perawatan sistem air dan pasteurisasi."
+    },
+    {
+        "nama": "Helicobacter pylori",
+        "familia": "Helicobacteraceae",
+        "deskripsi": "Spiral, Gram-negatif, tumbuh di lambung manusia.",
+        "sejarah": "Ditemukan oleh Barry Marshall dan Robin Warren, 1982.",
+        "makanan_terkait": "Air dan makanan terkontaminasi.",
+        "alasan_makanan": "Menyebar lewat makanan atau air tidak bersih.",
+        "penanganan": "Antibiotik dan penghambat asam lambung.",
+        "pencegahan": "Kebersihan makanan dan sanitasi air."
+    },
+    {
+        "nama": "Micrococcus luteus",
+        "familia": "Micrococcaceae",
+        "deskripsi": "Kokus Gram-positif, koloni kuning terang.",
+        "sejarah": "Dikenal sebagai flora normal kulit, kontaminan makanan potensial.",
+        "makanan_terkait": "Produk susu, daging.",
+        "alasan_makanan": "Kontaminasi selama pemrosesan.",
+        "penanganan": "Jarang patogenik, hanya untuk imunokompromais.",
+        "pencegahan": "Higiene dalam proses makanan."
+    },
+    {
+        "nama": "Geotrichum candidum",
+        "familia": "Dipodascaceae",
+        "deskripsi": "Jamur putih, membentuk miselium halus.",
+        "sejarah": "Digunakan dalam pembuatan keju dan dikenal sebagai pembusuk.",
+        "makanan_terkait": "Keju, susu, buah.",
+        "alasan_makanan": "Tumbuh pada produk susu dan buah yang lembap.",
+        "penanganan": "Buang makanan terkontaminasi.",
+        "pencegahan": "Simpan dalam suhu dingin dan kering."
+    },
+    {
+        "nama": "Acinetobacter baumannii",
+        "familia": "Moraxellaceae",
+        "deskripsi": "Coccobacilli Gram-negatif, non-motil.",
+        "sejarah": "Muncul sebagai patogen rumah sakit, juga kontaminan makanan.",
+        "makanan_terkait": "Sayur mentah, daging.",
+        "alasan_makanan": "Tahan desinfektan, mencemari lingkungan dapur.",
+        "penanganan": "Antibiotik tergantung resistensi.",
+        "pencegahan": "Sanitasi dan pengolahan makanan higienis."
+    },
+    {
+        "nama": "Serratia marcescens",
+        "familia": "Enterobacteriaceae",
+        "deskripsi": "Batang Gram-negatif, koloni merah muda.",
+        "sejarah": "Pertama kali dikenal karena pigmentasi unik pada abad ke-19.",
+        "makanan_terkait": "Produk susu, roti, makanan tinggi pati.",
+        "alasan_makanan": "Pigmentasi tumbuh pada makanan lembap dan manis.",
+        "penanganan": "Antibiotik jika menyebabkan infeksi.",
+        "pencegahan": "Simpan makanan kering dan tertutup."
+    }
 ]
 
-# Function untuk menampilkan halaman "Petri Panic" (Game)
-def petri_panic_page():
-    st.title("Petri Panic Game!")
+# --- MODE LIBRARY --- #
+if mode == "Library":
+    st.header("📚 Library")
+    mikroba_pilihan = st.selectbox("Pilih Mikroorganisme", [m["nama"] for m in library_data])
+
+    mikroba = next((m for m in library_data if m["nama"] == mikroba_pilihan), None)
+    if mikroba:
+        st.subheader(mikroba["nama"])
+        st.markdown(f"**Familia:** {mikroba['familia']}")
+        st.markdown(f"**Deskripsi Bentuk dan Warna:** {mikroba['deskripsi']}")
+        st.markdown(f"**Sejarah Penemuan:** {mikroba['sejarah']}")
+        st.markdown(f"**Terdapat pada Makanan:** {mikroba['makanan_terkait']}")
+        st.markdown(f"**Alasan Ditemukan di Makanan Tersebut:** {mikroba['alasan_makanan']}")
+        st.markdown(f"**Penanganan Jika Terpapar:** {mikroba['penanganan']}")
+        st.markdown(f"**Cara Pencegahan:** {mikroba['pencegahan']}")
+
+# --- MODE PETRI PANIC --- #
+elif mode == "Petri Panic":
+    st.header("🎮 Petri Panic")
+
+    questions = [
+        {
+            "question": "Apa nama ilmiah dari bakteri yang sering ditemukan dalam daging ayam mentah dan menyebabkan diare parah?",
+            "options": ["Salmonella enterica", "Lactobacillus acidophilus", "Penicillium roqueforti", "Escherichia coli", "Clostridium botulinum"],
+            "answer": "Salmonella enterica",
+            "explanation": "Salmonella enterica adalah bakteri penyebab umum diare dari daging ayam yang tidak matang."
+        },
+        {
+            "question": "Mikroorganisme penghasil aflatoksin yang tumbuh pada kacang tanah adalah...",
+            "options": ["Aspergillus flavus", "Candida albicans", "Rhizopus stolonifer", "Listeria monocytogenes", "Fusarium oxysporum"],
+            "answer": "Aspergillus flavus",
+            "explanation": "Aspergillus flavus menghasilkan aflatoksin yang bersifat karsinogenik dan sering ditemukan pada kacang-kacangan."
+        },
+        {
+            "question": "Apa genus dari mikroba berbentuk spiral yang hidup di lambung dan menyebabkan gastritis?",
+            "options": ["Helicobacter", "Staphylococcus", "Bacillus", "Micrococcus", "Pseudomonas"],
+            "answer": "Helicobacter",
+            "explanation": "Helicobacter pylori adalah bakteri spiral yang hidup di lambung manusia."
+        },
+        {
+            "question": "Mikroorganisme apakah yang umum digunakan dalam pembuatan roti dan bir?",
+            "options": ["Saccharomyces cerevisiae", "Escherichia coli", "Geotrichum candidum", "Mycobacterium avium", "Serratia marcescens"],
+            "answer": "Saccharomyces cerevisiae",
+            "explanation": "Saccharomyces cerevisiae adalah ragi yang digunakan untuk fermentasi dalam pembuatan roti dan bir."
+        },
+        {
+            "question": "Jenis bakteri Gram-positif yang dapat menyebabkan botulisme makanan adalah...",
+            "options": ["Clostridium botulinum", "Bacillus subtilis", "Listeria monocytogenes", "Staphylococcus epidermidis", "Yersinia enterocolitica"],
+            "answer": "Clostridium botulinum",
+            "explanation": "Clostridium botulinum menghasilkan toksin botulinum yang sangat beracun dan dapat menyebabkan botulisme."
+        },
+        {
+            "question": "Penicillium expansum menghasilkan toksin berbahaya yang disebut...",
+            "options": ["Patulin", "Aflatoksin", "Histamin", "Botulinum", "Ochratoksin"],
+            "answer": "Patulin",
+            "explanation": "Patulin adalah mikotoksin yang dihasilkan oleh Penicillium expansum, terutama pada apel busuk."
+        },
+        {
+            "question": "Bakteri mana yang merupakan flora normal kulit namun bisa menjadi patogen oportunistik dalam makanan?",
+            "options": ["Staphylococcus aureus", "Candida albicans", "Clostridium perfringens", "Geotrichum candidum", "Enterobacter sakazakii"],
+            "answer": "Staphylococcus aureus",
+            "explanation": "Staphylococcus aureus adalah flora normal kulit yang bisa menghasilkan enterotoksin jika mencemari makanan."
+        },
+        {
+            "question": "Apa nama jamur yang menyebabkan roti menjadi berjamur hitam?",
+            "options": ["Rhizopus stolonifer", "Aspergillus flavus", "Penicillium roqueforti", "Fusarium graminearum", "Mucor racemosus"],
+            "answer": "Rhizopus stolonifer",
+            "explanation": "Rhizopus stolonifer dikenal sebagai jamur roti hitam karena spora hitamnya."
+        },
+        {
+            "question": "Bakteri yang menyebabkan listeriosis, terutama berbahaya bagi ibu hamil adalah...",
+            "options": ["Listeria monocytogenes", "Salmonella typhi", "E. coli O157:H7", "Clostridium tetani", "Campylobacter jejuni"],
+            "answer": "Listeria monocytogenes",
+            "explanation": "Listeria monocytogenes bisa tumbuh di suhu rendah dan menyebabkan listeriosis yang berisiko bagi ibu hamil."
+        },
+        {
+            "question": "Jamur penghasil mikotoksin pada gandum yang menyebabkan penyakit pada manusia adalah...",
+            "options": ["Fusarium spp.", "Aspergillus niger", "Candida glabrata", "Saccharomyces cerevisiae", "Micrococcus luteus"],
+            "answer": "Fusarium spp.",
+            "explanation": "Fusarium menghasilkan mikotoksin seperti DON (vomitoksin) yang mencemari gandum dan biji-bijian."
+        }
+    ]
+
     score = 0
-    answers = {}
-
-    # Iterate through the questions
-    for idx, question in enumerate(questions):
-        st.write(question["question"])
-        
-        # Pilihan Ganda yang kosong (belum ada yang terisi)
-        answer = st.radio("Pilih jawaban:", question["options"], key=f"question_{idx}")
-        
-        # Menyimpan jawaban pengguna
-        answers[idx] = answer
-
-    # Tombol untuk submit dan memberikan feedback
-    if st.button("Submit"):
-        for idx, question in enumerate(questions):
-            answer = answers[idx]
-            if answer == question["answer"]:
+    for i, q in enumerate(questions, 1):
+        st.markdown(f"**{i}. {q['question']}**")
+        selected = st.radio(f"Jawaban Anda untuk nomor {i}:", q["options"], key=f"q{i}", index=None)
+        if selected:
+            if selected == q["answer"]:
+                st.success("✅ Jawaban benar!")
                 score += 1
-                st.markdown(f'<span style="color: green;">Jawaban benar: {question["answer"]}</span>', unsafe_allow_html=True)
             else:
-                st.markdown(f'<span style="color: red;">Jawaban salah: {answer}</span>', unsafe_allow_html=True)
+                st.error(f"❌ Jawaban salah. Jawaban yang benar adalah **{q['answer']}**.")
+                st.info(q["explanation"])
 
-            # Menampilkan penjelasan
-            st.write(f"Penjelasan: {question['explanation']}")
-            st.write("------")
-
-        st.write(f"Skor Anda: {score}/{len(questions)}")
-
-# Main Menu
-def main():
-    st.title("Food's Microorganism Encyclopedia")
-    page = st.sidebar.selectbox("Pilih Halaman", ["Library", "Petri Panic"])
-
-    if page == "Library":
-        library_page()
-    elif page == "Petri Panic":
-        petri_panic_page()
-
-if __name__ == "__main__":
-    main()
+    st.markdown("---")
+    st.markdown(f"### Skor akhir Anda: **{score} / {len(questions)}**")
