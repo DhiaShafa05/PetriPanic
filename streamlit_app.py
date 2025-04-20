@@ -238,6 +238,31 @@ def petri_panic_page():
     score = 0
     for question in questions:
         st.write(question["question"])
+        
+        # Pilihan Ganda tanpa jawaban yang terisi otomatis
+        answer = st.radio("Pilih jawaban:", question["options"], key=question["question"])
+
+        # Tampilan jawaban setelah memilih
+        if st.button("Submit", key=f"submit_{question['question']}"):
+            if answer == question["answer"]:
+                score += 1
+                st.markdown('<span style="color: green;">Jawaban Benar!</span>', unsafe_allow_html=True)
+            else:
+                st.markdown('<span style="color: red;">Jawaban Salah!</span>', unsafe_allow_html=True)
+        
+            st.write(f"Jawaban yang benar: {question['answer']}")
+            st.write(f"Penjelasan: {question['explanation']}")
+            st.write("------")
+
+    st.write(f"Skor Anda: {score}/{len(questions)}")
+
+
+# Function untuk menampilkan halaman "Petri Panic" (Game)
+def petri_panic_page():
+    st.title("Petri Panic Game!")
+    score = 0
+    for question in questions:
+        st.write(question["question"])
         answer = st.radio("Pilih jawaban:", question["options"], key=question["question"])
 
         # Tampilan jawaban setelah memilih
