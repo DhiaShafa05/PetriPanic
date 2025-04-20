@@ -1,6 +1,4 @@
 import streamlit as st
-
-import streamlit as st
 import random
 
 # Data mikroba (informasi yang sudah ditambahkan lebih lengkap)
@@ -21,7 +19,15 @@ microbes_data = {
         "Prevention": "Memasak daging hingga suhu internal yang aman, mencuci sayuran dan buah dengan air mengalir, menghindari konsumsi air yang tidak terjamin kebersihannya.",
         "Handling": "Konsumsi cairan yang cukup dan konsultasikan dengan tenaga medis jika gejala berlangsung lebih dari dua hari."
     },
-    # Tambahkan data mikroba lainnya sesuai kebutuhan...
+    "Listeria monocytogenes": {
+        "Description": "Listeria monocytogenes adalah bakteri Gram-positif yang dapat tumbuh pada suhu rendah, seperti dalam makanan yang disimpan dalam lemari es.",
+        "History": "Ditemukan pada tahun 1929 oleh E.G.D. Lister, namun baru dikenal lebih luas sebagai patogen pada tahun 1980-an.",
+        "Source": "Produk susu yang tidak dipasteurisasi, daging olahan, makanan siap saji yang disimpan pada suhu yang salah.",
+        "Symptoms": "Demam, nyeri otot, dan dalam kasus berat, listeriosis yang dapat menyebabkan keguguran pada wanita hamil, serta infeksi pada orang dengan sistem kekebalan tubuh yang lemah.",
+        "Prevention": "Menghindari makanan yang tidak dipasteurisasi, memasak makanan hingga suhu internal yang tepat, serta menjaga kebersihan tempat penyimpanan makanan.",
+        "Handling": "Listeriosis membutuhkan pengobatan medis segera, biasanya dengan antibiotik."
+    },
+    # Tambahkan mikroba lainnya sesuai kebutuhan
 }
 
 # Fungsi untuk seksi "Library"
@@ -70,16 +76,34 @@ def petri_panic_game():
     correct_microbe = random.choice(microbes_list)
     clue = microbes_data[correct_microbe]["Description"]
 
-    # Memulai game
+    # Menampilkan petunjuk
     st.subheader("Petunjuk:")
     st.write(clue)
 
+    # Input tebakan
     user_guess = st.text_input("Tebak nama mikroba:")
 
-    if user_guess.lower() == correct_microbe.lower():
-        st.success("Selamat! Jawaban Anda benar.")
-    elif user_guess != "":
-        st.error("Tebakan Anda salah. Coba lagi!")
+    # Jika pengguna menebak
+    if user_guess:
+        if user_guess.lower() == correct_microbe.lower():
+            st.success(f"Selamat! Jawaban Anda benar. Mikroba yang dimaksud adalah **{correct_microbe}**.")
+            st.subheader("Penjelasan:")
+            st.write(f"{correct_microbe} adalah {microbes_data[correct_microbe]['Description']}")
+            st.write(f"Sejarah Penemuan: {microbes_data[correct_microbe]['History']}")
+            st.write(f"Sumber Kontaminasi: {microbes_data[correct_microbe]['Source']}")
+            st.write(f"Gejala: {microbes_data[correct_microbe]['Symptoms']}")
+            st.write(f"Pencegahan: {microbes_data[correct_microbe]['Prevention']}")
+            st.write(f"Penanganan: {microbes_data[correct_microbe]['Handling']}")
+        else:
+            st.error(f"Tebakan Anda salah. Coba lagi!")
+            st.write(f"Jawaban yang benar adalah **{correct_microbe}**.")
+            st.subheader("Penjelasan:")
+            st.write(f"{correct_microbe} adalah {microbes_data[correct_microbe]['Description']}")
+            st.write(f"Sejarah Penemuan: {microbes_data[correct_microbe]['History']}")
+            st.write(f"Sumber Kontaminasi: {microbes_data[correct_microbe]['Source']}")
+            st.write(f"Gejala: {microbes_data[correct_microbe]['Symptoms']}")
+            st.write(f"Pencegahan: {microbes_data[correct_microbe]['Prevention']}")
+            st.write(f"Penanganan: {microbes_data[correct_microbe]['Handling']}")
 
 # Menu utama aplikasi
 st.sidebar.title("Menu")
@@ -89,4 +113,3 @@ if menu == "Library":
     library_section()
 elif menu == "Petri Panic":
     petri_panic_game()
-
