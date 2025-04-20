@@ -1,7 +1,7 @@
 import streamlit as st
 import random
 
-st.set_page_config(page_title="Microbiologi Pangan - Encyclopedia", layout="wide")
+st.set_page_config(page_title="Microbiologi Pangan - Encyclopedia by Kelompok 8 1E-1", layout="wide")
 st.title("🧫 Microbiologi Pangan - Encyclopedia")
 
 mode = st.sidebar.selectbox("Pilih Mode", ["Library", "Petri Panic"])
