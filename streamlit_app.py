@@ -91,9 +91,44 @@ microbes_data = {
         "Prevention": "Mencuci tangan dengan sabun, memanaskan makanan dengan benar.",
         "Handling": "Jika terpapar, pastikan banyak minum air untuk mencegah dehidrasi dan istirahat yang cukup."
     },
-    # Menambahkan mikroba lainnya sesuai kebutuhan
-    # Add another 15 types of microbes here as needed.
+    "Clostridium perfringens": {
+        "Description": "Clostridium perfringens adalah bakteri yang dapat menyebabkan keracunan makanan dengan gejala diare.",
+        "History": "Ditemukan oleh McClung dan colaboradores pada tahun 1943.",
+        "Source": "Daging, unggas, makanan yang disiapkan sebelumnya dan tidak dipanaskan dengan benar.",
+        "Symptoms": "Diare, sakit perut.",
+        "Prevention": "Menyimpan makanan dengan benar pada suhu yang tepat dan memanaskan makanan dengan suhu yang cukup.",
+        "Handling": "Jika terpapar, gejala biasanya hilang dalam 24 jam, tetapi pastikan untuk banyak minum."
+    },
+    "Aspergillus flavus": {
+        "Description": "Aspergillus flavus adalah jamur yang menghasilkan aflatoksin, toksin yang berbahaya bagi kesehatan.",
+        "History": "Ditemukan pada tahun 1960-an.",
+        "Source": "Kacang tanah, jagung, biji-bijian yang terkontaminasi.",
+        "Symptoms": "Keracunan aflatoksin dapat menyebabkan kerusakan hati.",
+        "Prevention": "Menghindari makanan yang terkontaminasi jamur, menyimpan makanan di tempat yang kering dan sejuk.",
+        "Handling": "Jika terpapar, perawatan medis diperlukan jika keracunan terjadi."
+    },
+    "Penicillium expansum": {
+        "Description": "Penicillium expansum adalah jamur yang dapat menghasilkan patulin, sebuah mikotoksin.",
+        "History": "Ditemukan oleh berbagai ilmuwan pada abad ke-20.",
+        "Source": "Apel yang rusak atau tidak disimpan dengan benar.",
+        "Symptoms": "Keracunan dapat menyebabkan gangguan pencernaan dan toksisitas hati.",
+        "Prevention": "Memeriksa dan menyimpan buah dengan benar, membuang buah yang rusak.",
+        "Handling": "Perawatan medis diperlukan jika ter
+
 }
+
+# List pertanyaan yang sudah disiapkan untuk game
+questions = [
+    {
+        "question": "Microba ini adalah bakteri yang dapat menyebabkan infeksi usus pada manusia, terutama ditemukan pada daging ayam mentah dan telur mentah. Apa nama mikroba ini?",
+        "answer": "Salmonella enterica"
+    },
+    {
+        "question": "Microba ini adalah bakteri yang sering ditemukan pada daging sapi kurang matang dan air yang terkontaminasi. Apa nama mikroba ini?",
+        "answer": "Escherichia coli (E. coli)"
+    },
+    # Tambahkan soal-soal lainnya hingga total 10 soal
+]
 
 # Fungsi untuk seksi "Library"
 def library_section():
@@ -136,45 +171,42 @@ def petri_panic_game():
     Anda akan diberikan petunjuk tentang mikroba yang ada dalam makanan. Tebak nama mikroba tersebut!
     """)
     
-    # Memilih mikroba secara acak
-    microbes_list = list(microbes_data.keys())
-    correct_microbe = random.choice(microbes_list)
-    
-    # Membuat petunjuk tanpa menyebutkan nama mikroba
-    clue = microbes_data[correct_microbe]["Description"]
-    source = microbes_data[correct_microbe]["Source"]
+    # Menyimpan skor dan soal yang telah dijawab
+    if 'score' not in st.session_state:
+        st.session_state.score = 0
+        st.session_state.current_question = 0
+        st.session_state.answers = []
 
-    # Membuat pertanyaan tanpa nama mikroba
-    question = f"Microba ini adalah bakteri yang dapat menyebabkan infeksi usus pada manusia, terutama ditemukan pada {source}. Apa nama mikroba ini?"
+    # Memastikan pemain tidak bisa meninggalkan mode "Petri Panic" sebelum selesai
+    if st.session_state.current_question < len(questions):
+        current_q = questions[st.session_state.current_question]
+        st.subheader("Petunjuk:")
+        st.write(current_q["question"])
 
-    # Menampilkan pertanyaan
-    st.subheader("Petunjuk:")
-    st.write(question)
+        # Input tebakan
+        user_guess = st.text_input("Tebak nama mikroba:")
 
-    # Input tebakan
-    user_guess = st.text_input("Tebak nama mikroba:")
+        # Cek jawaban jika pengguna memberikan jawaban
+        if user_guess:
+            if user_guess.lower() == current_q["answer"].lower():
+                st.success(f"Selamat! Jawaban Anda benar. Mikroba yang dimaksud adalah **{current_q['answer']}**.")
+                st.session_state.score += 1
+                st.session_state.answers.append(True)
+            else:
+                st.error(f"Tebakan Anda salah. Coba lagi!")
+                st.session_state.answers.append(False)
 
-    # Jika pengguna menebak
-    if user_guess:
-        if user_guess.lower() == correct_microbe.lower():
-            st.success(f"Selamat! Jawaban Anda benar. Mikroba yang dimaksud adalah **{correct_microbe}**.")
-            st.subheader("Penjelasan:")
-            st.write(f"{correct_microbe} adalah {microbes_data[correct_microbe]['Description']}")
-            st.write(f"Sejarah Penemuan: {microbes_data[correct_microbe]['History']}")
-            st.write(f"Sumber Kontaminasi: {microbes_data[correct_microbe]['Source']}")
-            st.write(f"Gejala: {microbes_data[correct_microbe]['Symptoms']}")
-            st.write(f"Pencegahan: {microbes_data[correct_microbe]['Prevention']}")
-            st.write(f"Penanganan: {microbes_data[correct_microbe]['Handling']}")
-        else:
-            st.error(f"Tebakan Anda salah. Coba lagi!")
-            st.write(f"Jawaban yang benar adalah **{correct_microbe}**.")
-            st.subheader("Penjelasan:")
-            st.write(f"{correct_microbe} adalah {microbes_data[correct_microbe]['Description']}")
-            st.write(f"Sejarah Penemuan: {microbes_data[correct_microbe]['History']}")
-            st.write(f"Sumber Kontaminasi: {microbes_data[correct_microbe]['Source']}")
-            st.write(f"Gejala: {microbes_data[correct_microbe]['Symptoms']}")
-            st.write(f"Pencegahan: {microbes_data[correct_microbe]['Prevention']}")
-            st.write(f"Penanganan: {microbes_data[correct_microbe]['Handling']}")
+            # Tombol untuk melanjutkan ke soal berikutnya
+            if st.button("Next"):
+                st.session_state.current_question += 1
+                st.experimental_rerun()
+
+    else:
+        # Setelah semua soal dijawab
+        st.subheader("Game Selesai!")
+        st.write(f"Skor Anda: {st.session_state.score}/{len(questions)}")
+        st.write("Terima kasih telah bermain!")
+        st.session_state.score = 0  # Reset skor untuk permainan berikutnya
 
 # Menu utama aplikasi
 st.sidebar.title("Menu")
@@ -184,4 +216,3 @@ if menu == "Library":
     library_section()
 elif menu == "Petri Panic":
     petri_panic_game()
-
